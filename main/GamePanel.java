@@ -92,9 +92,9 @@ public class GamePanel extends JPanel implements Runnable
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;  // down-casting graphics obj to graphics 2d object 
 
-        tileManager.draw(g2);
+        tileManager.draw(g2);       // make a draw method to handle complex drawing?
+        tileManager.drawTrees(g2);
         player.draw(g2);
-
         g2.dispose();
     }
 

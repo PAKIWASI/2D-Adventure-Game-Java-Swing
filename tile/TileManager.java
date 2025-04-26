@@ -15,7 +15,7 @@ public class TileManager
     private Tile[] tilesType; //0: grass, 1: water, ....
     private int[][] tileMap;
 
-    private static final int MAX_TILES_TYPE = 4;
+    private static final int MAX_TILES_TYPE = 10;
     
     
     public TileManager(GamePanel gp)
@@ -24,9 +24,10 @@ public class TileManager
         tilesType = new Tile[MAX_TILES_TYPE];
         tileMap = new int[gp.getMaxRows()][gp.getMaxCols()];
 
-        loadTileMap("/res/tilemaps/tilemap_1.txt");
+        loadTileMap("/res/tilemaps/tilemap_2.txt");
         getTileImage();
     }
+
 
     public void draw(Graphics2D g2)
     {
@@ -35,17 +36,59 @@ public class TileManager
         
         int maxRows = gp.getMaxRows();
         int maxCols = gp.getMaxCols();
-
         int size = gp.getTileSize();
 
-        while (row < maxRows)
+                // FIRST PASS: draw ground tiles
+        while (row < maxRows) 
         {
-            while (col < maxCols)
+            while (col < maxCols) 
             {
-                // Multiply row and col by tileSize to get the correct pixel position
                 int x = col * size;
                 int y = row * size;
-                g2.drawImage(tilesType[tileMap[row][col]].getImage(), x, y, size, size, null);
+                int tileType = tileMap[row][col];
+                
+                // Draw ONLY normal ground tiles (skip trees)
+                if (tileType != 4)
+                {
+                    g2.drawImage(tilesType[tileType].getImage(), x, y, size, size, null);
+                } 
+                else
+                {
+                    // Draw grass (or whatever default) under the tree
+                    g2.drawImage(tilesType[0].getImage(), x, y, size, size, null);
+                }
+                col++;
+            }
+            row++;
+            col = 0;
+        }
+    }
+
+    public void drawTrees(Graphics2D g2)
+    {
+        int row = 0;
+        int col = 0;
+        
+        int maxRows = gp.getMaxRows();
+        int maxCols = gp.getMaxCols();
+        int size = gp.getTileSize();
+
+        // SECOND PASS: draw trees
+        while (row < maxRows) 
+        {
+            while (col < maxCols) 
+            {
+                int x = col * size;
+                int y = row * size;
+                int tileType = tileMap[row][col];
+                
+                if (tileType == 4) 
+                {
+                    int treeSize = size * 2;
+                    int treeX = x - (treeSize - size);
+                    int treeY = y - (treeSize - size);
+                    g2.drawImage(tilesType[tileType].getImage(), treeX, treeY, treeSize, treeSize, null);
+                }
                 col++;
             }
             row++;
@@ -94,9 +137,23 @@ public class TileManager
             tilesType[2] = new Tile();
             tilesType[2].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/dirt.png")));
             
-            
             tilesType[3] = new Tile();
-            tilesType[3].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/wall.png")));
+            tilesType[3].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/sand.png")));
+        
+            tilesType[4] = new Tile();
+            tilesType[4].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/tree1.png")));
+
+            tilesType[5] = new Tile();
+            tilesType[5].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/wall.png")));
+
+            tilesType[6] = new Tile();
+            tilesType[6].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/stone.png")));
+
+            tilesType[7] = new Tile();
+            tilesType[7].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/path.png")));
+        
+            tilesType[8] = new Tile();
+            tilesType[8].setImage(ImageIO.read(getClass().getResourceAsStream("/res/backgrounds/path1.png")));
         } 
         catch (IOException e) 
         {
