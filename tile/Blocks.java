@@ -7,9 +7,10 @@ public enum Blocks
     DIRT,   // 2
     SAND,   // 3
     TREE,   // 4
-    WALL,   // 5
-    STONE,  // 6
+    WALL,   // 5  need rotated wall too
+    STONE,  // 6  stone pathway better
     PATH1,  // 7
-    PATH2   // 8
+    PATH2,   // 8
+    
 
 }

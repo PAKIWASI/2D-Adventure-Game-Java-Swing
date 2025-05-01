@@ -2,7 +2,9 @@ package main;
 
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.Player;
+import tile.Tile;
 import tile.TileManager;
 
 import java.awt.Color;
@@ -18,12 +20,20 @@ public class GamePanel extends JPanel implements Runnable
     private final int scale = 3; // 48x48 on screen 
     private final int tileSize = OgTileSize * scale; // displayed on screen = 16 x 3 = 48 x 48
 
-    private final int maxScreenRow = 12;  // the game has 12 x 16 tiles 
-    private final int maxScreenCol = 16;   
-    private final int HEIGHT = tileSize * maxScreenRow;  // 576 pixels  
-    private final int WIDTH = tileSize * maxScreenCol;  // 768 pixels
+    private final int maxScreenRows = 12;  // the game has 12 x 16 tiles 
+    private final int maxScreenCols = 16;   
+    private final int SCREEN_HEIGHT = tileSize * maxScreenRows;  // 576 pixels  
+    private final int SCREEN_WIDTH = tileSize * maxScreenCols;  // 768 pixels
 
     private final int FPS = 60;
+
+
+    // WORLD SETTINGS
+    private final int maxWorldRows = 64;
+    private final int maxWorldCols = 64;
+    private final int WORLD_HEIGHT = tileSize * maxWorldRows;
+    private final int WORLD_WIDTH = tileSize * maxWorldCols;
+
 
     // For in-game time, just like irl time
     private Thread gameThread;
@@ -34,11 +44,12 @@ public class GamePanel extends JPanel implements Runnable
 
     private Player player = new Player(this, keyHandler);
 
+    //private Collition collChecker = new Collition(this); 
 
     // Constructor
     public GamePanel()
     {
-        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true); // prevent flickering (graphics are loaded completely before being drawn to screen)
         this.addKeyListener(keyHandler);
@@ -93,12 +104,29 @@ public class GamePanel extends JPanel implements Runnable
         Graphics2D g2 = (Graphics2D)g;  // down-casting graphics obj to graphics 2d object 
 
         tileManager.draw(g2);       // make a draw method to handle complex drawing?
-        tileManager.drawTrees(g2);
+        
         player.draw(g2);
+        
         g2.dispose();
     }
 
+    //public void checkCollition(Entity entity)
+    //{
+   //     Collition.checkTile(this, entity);
+   // }
+
+    public Player getPlayer() { return player; }
+    
+    public int[][] getTileMap() { return tileManager.getTileMap(); }
+    public Tile[] getTileTypes() { return tileManager.getTileTypes(); }
+    
     public int getTileSize() { return tileSize; }
-    public int getMaxRows() { return maxScreenRow; }
-    public int getMaxCols() { return maxScreenCol; }
+    public int getMaxWorldRows() { return maxWorldRows; }
+    public int getMaxWorldCols() { return maxWorldCols; }
+    
+    @Override
+    public int getWidth() { return SCREEN_WIDTH; }
+    @Override
+    public int getHeight() { return SCREEN_HEIGHT;  }
+
 }
